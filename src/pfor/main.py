@@ -20,9 +20,6 @@ from pfor.db.database import engine, init_db
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 frontend_path = os.path.join(BASE_DIR, "frontend")
 
-# Монтирование статики
-app.mount("/static", StaticFiles(directory=frontend_path), name="static")
-
 # ---------------------------------------------------------------------------
 # Logging configuration
 # ---------------------------------------------------------------------------
@@ -48,6 +45,9 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+app.state.db_status = "unknown"
+app.state.ollama_status = "unknown"
 
 # ---------------------------------------------------------------------------
 # CORS — allow all origins in development; restrict in production
@@ -142,7 +142,6 @@ async def health_check():
     )
 
 
-frontend_path = os.path.join(os.path.dirname(__file__), "../../frontend")
 app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 
 @app.get("/", tags=["System"], summary="Root endpoint")
