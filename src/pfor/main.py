@@ -3,12 +3,12 @@ PFOR Platform — FastAPI Application Entry Point
 Initializes the database, registers routers, and configures CORS.
 """
 import logging
-import os
+from pathlib import Path
 
 import httpx
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
@@ -17,8 +17,8 @@ from pfor.api.strategy import router as strategy_router
 from pfor.core.config import get_settings
 from pfor.db.database import engine, init_db
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-frontend_path = os.path.join(BASE_DIR, "frontend")
+BASE_DIR = Path(__file__).resolve().parents[2]
+STATIC_DIR = BASE_DIR / "static"
 
 # ---------------------------------------------------------------------------
 # Logging configuration
@@ -46,6 +46,9 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+# Required static mount for the project root "static" folder.
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
 app.state.db_status = "unknown"
 app.state.ollama_status = "unknown"
 
@@ -54,7 +57,7 @@ app.state.ollama_status = "unknown"
 # ---------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Разрешаем доступ со всех IP, включая 178.218.207.173
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -70,7 +73,6 @@ app.include_router(strategy_router)
 # ---------------------------------------------------------------------------
 # Dependency checks
 # ---------------------------------------------------------------------------
-
 async def check_database_connection() -> tuple[bool, str]:
     """Check that PostgreSQL is reachable and accepting queries."""
     try:
@@ -98,7 +100,7 @@ async def check_ollama_connection() -> tuple[bool, str]:
 
 @app.on_event("startup")
 async def on_startup() -> None:
-    """Initialize the PostgreSQL tables and verify external dependencies."""
+    """Initialize database tables and verify external dependencies."""
     logger.info("PFOR API starting up...")
     try:
         init_db()
@@ -123,9 +125,6 @@ async def on_startup() -> None:
         logger.warning("Startup dependency check failed: %s", ollama_message)
 
 
-# ---------------------------------------------------------------------------
-# Health check
-# ---------------------------------------------------------------------------
 @app.get("/health", tags=["System"], summary="Health check")
 async def health_check():
     """Return service health status and configuration summary."""
@@ -142,14 +141,14 @@ async def health_check():
     )
 
 
-app.mount("/static", StaticFiles(directory=frontend_path), name="static")
+@app.get("/", tags=["System"], summary="Root endpoint", include_in_schema=False)
+async def root() -> FileResponse:
+    """Serve the frontend index file from the static directory."""
+    return FileResponse(str(STATIC_DIR / "index.html"))
 
-@app.get("/", tags=["System"], summary="Root endpoint")
-def root():
-    """Serve the frontend index.html on the root path."""
-    return FileResponse(os.path.join(frontend_path, "index.html"))
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("pfor.main:app", host="0.0.0.0", port=8000, reload=True)
 

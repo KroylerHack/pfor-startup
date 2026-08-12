@@ -13,55 +13,39 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 1. Запуск Smoke-тестов перед копированием кода на VPS
-      - name: Run Smoke Tests
-        run: |
-          source /pfor/venv/bin/activate || true
-          pytest tests/ -v -m smoke --suppress-tests-failed-exit-code || pytest -v || echo "Warning: Tests skipped or failed gracefully"
-
-      # 2. Зеркальная синхронизация кода с удалением устаревших файлов
-      - name: Sync latest code to /pfor/
+      # 1. Зеркальная синхронизация кода в реальную папку /home/pfor/pfor/
+      - name: Sync latest code
         run: |
           rsync -av --delete \
             --exclude='.git' \
             --exclude='venv' \
             --exclude='.env' \
             --exclude='__pycache__' \
-            ./ /pfor/
+            ./ /home/pfor/pfor/
 
-      # 3. Очистка кэша и обновление зависимостей Python
+      # 2. Очистка кэша и обновление зависимостей Python
       - name: Install dependencies & Cleanup Cache
         run: |
-          find /pfor -type d -name "__pycache__" -exec rm -r {} + 2>/dev/null || true
-          find /pfor -type f -name "*.pyc" -delete 2>/dev/null || true
-          /pfor/venv/bin/pip install --upgrade pip
-          /pfor/venv/bin/pip install -r /pfor/requirements.txt
+          find /home/pfor/pfor -type d -name "__pycache__" -exec rm -r {} + 2>/dev/null || true
+          find /home/pfor/pfor -type f -name "*.pyc" -delete 2>/dev/null || true
+          /home/pfor/pfor/venv/bin/pip install --upgrade pip
+          /home/pfor/pfor/venv/bin/pip install -r /home/pfor/pfor/requirements.txt
 
-      # 4. Обновление systemd службы (если менялся pfor.service)
+      # 3. Обновление systemd службы
       - name: Update systemd service config
         run: |
-          if [ -f /pfor/deploy/pfor.service ]; then
-            sudo cp /pfor/deploy/pfor.service /etc/systemd/system/pfor.service
+          if [ -f /home/pfor/pfor/deploy/pfor.service ]; then
+            sudo cp /home/pfor/pfor/deploy/pfor.service /etc/systemd/system/pfor.service
             sudo systemctl daemon-reload
           fi
 
-      # 5. Перезапуск FastAPI службы
+      # 4. Перезапуск FastAPI службы
       - name: Restart FastAPI service
         run: |
           sudo systemctl restart pfor
+          sleep 6
 
-      # 6. Проверка доступности API (Healthcheck с циклом и логами)
+      # 5. Проверка доступности API (Healthcheck)
       - name: Check Health
         run: |
-          for i in {1..10}; do
-            if curl -fsS http://127.0.0.1:8000/health || curl -fsS http://127.0.0.1:8000/docs; then
-              echo "Server is UP and healthy!"
-              exit 0
-            fi
-            echo "Waiting for FastAPI service to start..."
-            sleep 2
-          done
-
-          echo "Health check failed! Showing last 50 lines of systemd service logs:"
-          sudo journalctl -u pfor -n 50 --no-pager
-          exit 1
+          curl -fsS http://127.0.0.1:8000/health || curl -fsS http://127.0.0.1:8000/docs
