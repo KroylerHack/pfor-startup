@@ -31,6 +31,10 @@
   --warning: #f59e0b;
   --error: #ef4444;
 
+  --toolbar-bg: rgba(255, 255, 255, 0.7);
+  --toolbar-border: rgba(17, 24, 39, 0.08);
+  --toolbar-text: #111827;
+
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
 
   --space-xs: 0.25rem;
@@ -55,6 +59,35 @@
   --shadow-lg: 0 18px 42px rgba(15, 23, 42, 0.08);
 }
 
+body[data-theme="dark"] {
+  --bg-primary: #090b11;
+  --bg-secondary: rgba(17, 24, 39, 0.85);
+  --bg-card: #111827;
+  --bg-card-hover: #1a2333;
+  --bg-soft: #0f172a;
+
+  --accent-primary: #dbeafe;
+  --accent-secondary: #93c5fd;
+  --accent-gradient: linear-gradient(135deg, #f8fafc 0%, #93c5fd 100%);
+  --accent-glow: 0 0 0 1px rgba(148, 163, 184, 0.2);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --border-subtle: rgba(148, 163, 184, 0.18);
+  --border-strong: rgba(148, 163, 184, 0.28);
+  --border-glow: rgba(148, 163, 184, 0.2);
+
+  --toolbar-bg: rgba(15, 23, 42, 0.9);
+  --toolbar-border: rgba(148, 163, 184, 0.18);
+  --toolbar-text: #e2e8f0;
+
+  --shadow-sm: 0 1px 2px rgba(2, 6, 23, 0.28);
+  --shadow-md: 0 10px 30px rgba(2, 6, 23, 0.42);
+  --shadow-lg: 0 18px 42px rgba(2, 6, 23, 0.52);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -74,6 +107,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 .container {
@@ -101,6 +135,57 @@ body {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-sm);
+}
+
+body[data-theme="dark"] .navbar {
+  background: rgba(9, 11, 17, 0.82);
+}
+
+.toolbar-switches {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.28rem;
+  border: 1px solid var(--toolbar-border);
+  background: var(--toolbar-bg);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+}
+
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  border-radius: var(--radius-full);
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: var(--toolbar-text);
+  opacity: 0.7;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.38rem 0.7rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lang-btn.active {
+  background: var(--accent-primary);
+  color: #fff;
+  opacity: 1;
+}
+
+.theme-toggle {
+  min-width: 36px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1rem;
 }
 
 .navbar-brand {

@@ -19,6 +19,99 @@ const AGENTS = [
 // Approximate time each agent takes (for progress animation only)
 const AGENT_DURATIONS = [8000, 8000, 8000, 6000]; // ms
 
+const TRANSLATIONS = {
+  ru: {
+    'nav.login': 'Войти',
+    'nav.register': 'Регистрация',
+    'nav.logout': 'Выйти',
+    'hero.badge': 'Мультиагентный ИИ · Gemini API',
+    'hero.title': 'Автоматизированная генерация бизнес-стратегий',
+    'hero.subtitle': 'Введите вашу проблему простым языком — мультиагентная система сформирует детальный план за 5 минут.',
+    'input.label': 'Ваша бизнес-задача',
+    'input.placeholder': 'Например: Наш стартап делает B2B SaaS для автоматизации бухгалтерии малого бизнеса. Мы не можем масштабировать продажи — CAC слишком высок, конверсия из лида в клиента менее 5%. Как нам это исправить?',
+    'button.generate': 'Сформировать стратегию',
+    'report.heading': 'Стратегический отчёт',
+    'report.ready': 'Готово',
+    'report.copy': '📋 Копировать',
+    'report.print': '🖨️ Печать',
+    'report.new': '+ Новый отчёт',
+    'feature.one.title': 'Стратегический анализ',
+    'feature.one.desc': 'Agent Director формулирует цели и концепцию решения на основе вашей задачи.',
+    'feature.two.title': 'GTM и маркетинг',
+    'feature.two.desc': 'Agent Marketer строит воронки, определяет каналы и позиционирование.',
+    'feature.three.title': 'Финансовое моделирование',
+    'feature.three.desc': 'Agent Financier считает юнит-экономику, бюджет и сценарии роста.',
+    'char.count': '{count} characters',
+  },
+  en: {
+    'nav.login': 'Log in',
+    'nav.register': 'Register',
+    'nav.logout': 'Log out',
+    'hero.badge': 'Multi-agent AI · Gemini API',
+    'hero.title': 'Automated business strategy generation',
+    'hero.subtitle': 'Describe your challenge in plain language — the multi-agent system will build a detailed plan in minutes.',
+    'input.label': 'Your business challenge',
+    'input.placeholder': 'For example: Our startup builds B2B SaaS for automating accounting for small businesses. We cannot scale sales because CAC is too high and conversion from lead to client is below 5%. How can we fix this?',
+    'button.generate': 'Generate strategy',
+    'report.heading': 'Strategic report',
+    'report.ready': 'Ready',
+    'report.copy': '📋 Copy',
+    'report.print': '🖨️ Print',
+    'report.new': '+ New report',
+    'feature.one.title': 'Strategic analysis',
+    'feature.one.desc': 'The Director agent defines goals and solution direction based on your challenge.',
+    'feature.two.title': 'GTM & marketing',
+    'feature.two.desc': 'The Marketer agent maps funnels, channels, and positioning.',
+    'feature.three.title': 'Financial modeling',
+    'feature.three.desc': 'The Financier agent calculates unit economics, budget, and growth scenarios.',
+    'char.count': '{count} characters',
+  }
+};
+
+function applyLanguage(lang = 'ru') {
+  const dict = TRANSLATIONS[lang] || TRANSLATIONS.ru;
+  document.documentElement.lang = lang;
+  document.body.dataset.lang = lang;
+
+  document.querySelectorAll('[data-i18n]').forEach((node) => {
+    const key = node.dataset.i18n;
+    if (dict[key]) node.textContent = dict[key];
+  });
+
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((node) => {
+    const key = node.dataset.i18nPlaceholder;
+    if (dict[key]) node.placeholder = dict[key];
+  });
+
+  const langButtons = document.querySelectorAll('.lang-btn');
+  langButtons.forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+
+  if (problemTextarea) {
+    const len = problemTextarea.value.length;
+    charCounter.textContent = dict['char.count'].replace('{count}', len);
+  }
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('pfor-theme') || 'light';
+  document.body.dataset.theme = savedTheme;
+  const button = document.getElementById('theme-toggle-btn');
+  if (button) {
+    button.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  }
+}
+
+function toggleTheme() {
+  const current = document.body.dataset.theme === 'dark' ? 'dark' : 'light';
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.body.dataset.theme = next;
+  localStorage.setItem('pfor-theme', next);
+  const button = document.getElementById('theme-toggle-btn');
+  if (button) button.textContent = next === 'dark' ? '☀️' : '🌙';
+}
+
 // ---------------------------------------------------------------------------
 // DOM references (resolved at DOMContentLoaded)
 // ---------------------------------------------------------------------------

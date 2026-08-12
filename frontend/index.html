@@ -30,6 +30,14 @@
     </a>
 
     <div class="navbar-actions">
+      <div class="toolbar-switches" aria-label="Interface controls">
+        <div class="language-switch" aria-label="Language switcher">
+          <button class="lang-btn active" type="button" data-lang="ru" aria-label="Switch to Russian">RU</button>
+          <button class="lang-btn" type="button" data-lang="en" aria-label="Switch to English">EN</button>
+        </div>
+        <button id="theme-toggle-btn" class="btn btn-ghost theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
+      </div>
+
       <!-- Authenticated user badge (hidden until logged in) -->
       <div id="nav-user-badge" class="user-badge hidden" aria-live="polite">
         <span class="user-badge-dot" aria-hidden="true"></span>
@@ -42,6 +50,7 @@
         class="btn btn-ghost"
         aria-label="Open login dialog"
         type="button"
+        data-i18n="nav.login"
       >
         Войти
       </button>
@@ -52,6 +61,7 @@
         class="btn btn-primary"
         aria-label="Open register dialog"
         type="button"
+        data-i18n="nav.register"
       >
         Регистрация
       </button>
@@ -62,6 +72,7 @@
         class="btn btn-ghost hidden"
         aria-label="Log out"
         type="button"
+        data-i18n="nav.logout"
       >
         Выйти
       </button>
@@ -76,16 +87,16 @@
 
       <!-- ---- HERO SECTION ---- -->
       <section class="hero" aria-labelledby="hero-heading">
-        <div class="hero-badge" aria-label="Platform status">
+        <div class="hero-badge" aria-label="Platform status" data-i18n="hero.badge">
           <span class="hero-badge-dot" aria-hidden="true"></span>
           Мультиагентный ИИ · Gemini API
         </div>
 
         <h1 id="hero-heading" class="hero-title">
-          <span class="hero-title-gradient">Автоматизированная генерация бизнес-стратегий</span>
+          <span class="hero-title-gradient" data-i18n="hero.title">Автоматизированная генерация бизнес-стратегий</span>
         </h1>
 
-        <p class="hero-subtitle">
+        <p class="hero-subtitle" data-i18n="hero.subtitle">
           Введите вашу проблему простым языком — мультиагентная система сформирует детальный план за 5 минут.
         </p>
 
@@ -151,13 +162,14 @@
 
         <!-- ---- INPUT CARD ---- -->
         <div class="input-card" role="region" aria-label="Problem input">
-          <label for="problem-textarea" class="input-card-label">
+          <label for="problem-textarea" class="input-card-label" data-i18n="input.label">
             Ваша бизнес-задача
           </label>
 
           <textarea
             id="problem-textarea"
             class="problem-textarea"
+            data-i18n-placeholder="input.placeholder"
             placeholder="Например: Наш стартап делает B2B SaaS для автоматизации бухгалтерии малого бизнеса. Мы не можем масштабировать продажи — CAC слишком высок, конверсия из лида в клиента менее 5%. Как нам это исправить?"
             aria-label="Describe your business problem"
             aria-describedby="char-counter"
@@ -172,6 +184,7 @@
               class="btn btn-primary btn-large"
               type="button"
               aria-label="Generate strategic report"
+              data-i18n="button.generate"
             >
               Сформировать стратегию
             </button>
@@ -234,8 +247,8 @@
       >
         <div class="report-header">
           <div class="report-header-left">
-            <h2 id="report-heading">Стратегический отчёт</h2>
-            <div class="report-badge" aria-label="Report generated">Готово</div>
+            <h2 id="report-heading" data-i18n="report.heading">Стратегический отчёт</h2>
+            <div class="report-badge" aria-label="Report generated" data-i18n="report.ready">Готово</div>
             <p id="report-meta-date" style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;"></p>
           </div>
           <div class="report-actions">
@@ -244,6 +257,7 @@
               class="btn btn-ghost"
               type="button"
               aria-label="Copy report to clipboard"
+              data-i18n="report.copy"
             >
               📋 Копировать
             </button>
@@ -252,6 +266,7 @@
               class="btn btn-ghost"
               type="button"
               aria-label="Print report"
+              data-i18n="report.print"
             >
               🖨️ Печать
             </button>
@@ -260,6 +275,7 @@
               class="btn btn-outline"
               type="button"
               aria-label="Create new report"
+              data-i18n="report.new"
             >
               + Новый отчёт
             </button>
@@ -277,18 +293,18 @@
       <section class="features-strip" aria-label="Platform features">
         <div class="feature-item">
           <span class="feature-icon" aria-hidden="true">🎯</span>
-          <h3 class="feature-title">Стратегический анализ</h3>
-          <p class="feature-desc">Agent Director формулирует цели и концепцию решения на основе вашей задачи.</p>
+          <h3 class="feature-title" data-i18n="feature.one.title">Стратегический анализ</h3>
+          <p class="feature-desc" data-i18n="feature.one.desc">Agent Director формулирует цели и концепцию решения на основе вашей задачи.</p>
         </div>
         <div class="feature-item">
           <span class="feature-icon" aria-hidden="true">📊</span>
-          <h3 class="feature-title">GTM и маркетинг</h3>
-          <p class="feature-desc">Agent Marketer строит воронки, определяет каналы и позиционирование.</p>
+          <h3 class="feature-title" data-i18n="feature.two.title">GTM и маркетинг</h3>
+          <p class="feature-desc" data-i18n="feature.two.desc">Agent Marketer строит воронки, определяет каналы и позиционирование.</p>
         </div>
         <div class="feature-item">
           <span class="feature-icon" aria-hidden="true">💡</span>
-          <h3 class="feature-title">Финансовое моделирование</h3>
-          <p class="feature-desc">Agent Financier считает юнит-экономику, бюджет и сценарии роста.</p>
+          <h3 class="feature-title" data-i18n="feature.three.title">Финансовое моделирование</h3>
+          <p class="feature-desc" data-i18n="feature.three.desc">Agent Financier считает юнит-экономику, бюджет и сценарии роста.</p>
         </div>
       </section>
 
