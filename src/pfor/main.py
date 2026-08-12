@@ -17,8 +17,27 @@ from pfor.api.strategy import router as strategy_router
 from pfor.core.config import get_settings
 from pfor.db.database import engine, init_db
 
-BASE_DIR = Path(__file__).resolve().parents[2]
+CURRENT_FILE = Path(__file__).resolve()
+BASE_DIR = CURRENT_FILE.parents[2]
 STATIC_DIR = BASE_DIR / "static"
+INDEX_FILE = BASE_DIR / "index.html"
+
+print("\n" + "=" * 50)
+print(f"[DEPLOY DEBUG] Executing main.py from: {CURRENT_FILE}")
+print(f"[DEPLOY DEBUG] Calculated BASE_DIR: {BASE_DIR}")
+print(f"[DEPLOY DEBUG] Target STATIC_DIR: {STATIC_DIR}")
+print(f"[DEPLOY DEBUG] STATIC_DIR Exists?: {STATIC_DIR.exists()}")
+if STATIC_DIR.exists():
+    print(f"[DEPLOY DEBUG] Files inside static: {[f.name for f in STATIC_DIR.iterdir()]}")
+print(f"[DEPLOY DEBUG] INDEX_FILE: {INDEX_FILE}")
+print(f"[DEPLOY DEBUG] INDEX_FILE Exists?: {INDEX_FILE.exists()}")
+print("=" * 50 + "\n")
+
+if not STATIC_DIR.exists():
+    raise RuntimeError(f"CRITICAL: Static directory not found at {STATIC_DIR}!")
+
+if not INDEX_FILE.exists():
+    raise RuntimeError(f"CRITICAL: Index file not found at {INDEX_FILE}!")
 
 # ---------------------------------------------------------------------------
 # Logging configuration
@@ -143,8 +162,8 @@ async def health_check():
 
 @app.get("/", tags=["System"], summary="Root endpoint", include_in_schema=False)
 async def root() -> FileResponse:
-    """Serve the frontend index file from the static directory."""
-    return FileResponse(str(STATIC_DIR / "index.html"))
+    """Serve the frontend index file from the project root."""
+    return FileResponse(str(INDEX_FILE))
 
 
 if __name__ == "__main__":
