@@ -45,13 +45,23 @@ jobs:
             sudo systemctl daemon-reload
           fi
 
-      # 5. Перезапуск FastAPI службы и ожидание старта
+      # 5. Перезапуск FastAPI службы
       - name: Restart FastAPI service
         run: |
           sudo systemctl restart pfor
-          sleep 4
 
-      # 6. Проверка доступности API (Healthcheck)
+      # 6. Проверка доступности API (Healthcheck с циклом и логами)
       - name: Check Health
         run: |
-          curl -fsS http://127.0.0.1:8000/health || curl -fsS http://127.0.0.1:8000/docs
+          for i in {1..10}; do
+            if curl -fsS http://127.0.0.1:8000/health || curl -fsS http://127.0.0.1:8000/docs; then
+              echo "Server is UP and healthy!"
+              exit 0
+            fi
+            echo "Waiting for FastAPI service to start..."
+            sleep 2
+          done
+
+          echo "Health check failed! Showing last 50 lines of systemd service logs:"
+          sudo journalctl -u pfor -n 50 --no-pager
+          exit 1
