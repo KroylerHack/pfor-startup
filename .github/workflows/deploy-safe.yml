@@ -13,29 +13,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 1. Зеркальная синхронизация кода в реальную папку /home/pfor/pfor/
+      # 1. Синхронизация кода в рабочую папку pfor-startup
       - name: Sync latest code
         run: |
-          rsync -av --delete \
+          rsync -av \
             --exclude='.git' \
             --exclude='venv' \
             --exclude='.env' \
             --exclude='__pycache__' \
-            ./ /home/pfor/pfor/
+            --exclude='.pytest_cache' \
+            ./ /home/pfor/pfor-startup/
 
       # 2. Очистка кэша и обновление зависимостей Python
       - name: Install dependencies & Cleanup Cache
         run: |
-          find /home/pfor/pfor -type d -name "__pycache__" -exec rm -r {} + 2>/dev/null || true
-          find /home/pfor/pfor -type f -name "*.pyc" -delete 2>/dev/null || true
-          /home/pfor/pfor/venv/bin/pip install --upgrade pip
-          /home/pfor/pfor/venv/bin/pip install -r /home/pfor/pfor/requirements.txt
+          find /home/pfor/pfor-startup -type d -name "__pycache__" -exec rm -r {} + 2>/dev/null || true
+          find /home/pfor/pfor-startup -type f -name "*.pyc" -delete 2>/dev/null || true
+          /home/pfor/pfor-startup/venv/bin/pip install --upgrade pip
+          /home/pfor/pfor-startup/venv/bin/pip install -r /home/pfor/pfor-startup/requirements.txt
 
       # 3. Обновление systemd службы
       - name: Update systemd service config
         run: |
-          if [ -f /home/pfor/pfor/deploy/pfor.service ]; then
-            sudo cp /home/pfor/pfor/deploy/pfor.service /etc/systemd/system/pfor.service
+          if [ -f /home/pfor/pfor-startup/deploy/pfor.service ]; then
+            sudo cp /home/pfor/pfor-startup/deploy/pfor.service /etc/systemd/system/pfor.service
             sudo systemctl daemon-reload
           fi
 
