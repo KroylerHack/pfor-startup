@@ -4,7 +4,7 @@
  * and auth modal interactions (login / register tabs).
  */
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = window.location.origin;
 const TOKEN_KEY = 'pfor_access_token';
 const USER_KEY  = 'pfor_user';
 

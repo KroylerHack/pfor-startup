@@ -17,6 +17,12 @@ from pfor.api.strategy import router as strategy_router
 from pfor.core.config import get_settings
 from pfor.db.database import engine, init_db
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+frontend_path = os.path.join(BASE_DIR, "frontend")
+
+# Монтирование статики
+app.mount("/static", StaticFiles(directory=frontend_path), name="static")
+
 # ---------------------------------------------------------------------------
 # Logging configuration
 # ---------------------------------------------------------------------------
