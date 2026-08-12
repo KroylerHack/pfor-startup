@@ -40,7 +40,12 @@ class Settings(BaseSettings):
         if self.DATABASE_URL:
             return self.DATABASE_URL
 
-        return "sqlite:///./pfor_local.db"
+        postgres_url = (
+            f"postgresql+psycopg2://{quote_plus(str(self.POSTGRES_USER))}:"
+            f"{quote_plus(str(self.POSTGRES_PASSWORD))}@{self.POSTGRES_SERVER}:"
+            f"{self.POSTGRES_PORT}/{quote_plus(str(self.POSTGRES_DB))}"
+        )
+        return postgres_url
 
     @property
     def postgres_server(self) -> str:
