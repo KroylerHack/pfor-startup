@@ -19,13 +19,15 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    POSTGRES_SERVER: str = "100.105.40.29"
+    DATABASE_URL: str | None = None
+
+    POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "pfor_user"
     POSTGRES_PASSWORD: str = "pfor_password"
     POSTGRES_DB: str = "pfor_db"
 
-    OLLAMA_BASE_URL: str = "http://100.105.40.29:11434"
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "llama3.1"
 
     secret_key: str = secrets.token_urlsafe(32)
@@ -35,11 +37,10 @@ class Settings(BaseSettings):
 
     @property
     def database_url(self) -> str:
-        password = quote_plus(str(self.POSTGRES_PASSWORD))
-        return (
-            f"postgresql+psycopg2://{self.POSTGRES_USER}:{password}@"
-            f"{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-        )
+        if self.DATABASE_URL:
+            return self.DATABASE_URL
+
+        return "sqlite:///./pfor_local.db"
 
     @property
     def postgres_server(self) -> str:

@@ -6,6 +6,7 @@
 /* --- Google Fonts Import --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* --- CSS Custom Properties (Design Tokens) --- */
 :root {
   --bg-primary: #f5f5f3;
   --bg-secondary: rgba(255, 255, 255, 0.78);
@@ -16,6 +17,7 @@
   --accent-primary: #1f2937;
   --accent-secondary: #4b5563;
   --accent-gradient: linear-gradient(135deg, #111827 0%, #374151 100%);
+  --accent-glow: 0 0 0 1px rgba(17, 24, 39, 0.08);
 
   --text-primary: #111827;
   --text-secondary: #475569;
@@ -23,6 +25,7 @@
 
   --border-subtle: rgba(17, 24, 39, 0.08);
   --border-strong: rgba(17, 24, 39, 0.14);
+  --border-glow: rgba(17, 24, 39, 0.15);
 
   --success: #16a34a;
   --warning: #f59e0b;
@@ -81,6 +84,9 @@ body {
   z-index: 1;
 }
 
+/* ============================================================
+   HEADER / NAVBAR
+   ============================================================ */
 .navbar {
   position: sticky;
   top: 0;
@@ -152,6 +158,9 @@ body {
   border-radius: 50%;
 }
 
+/* ============================================================
+   BUTTONS
+   ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -207,6 +216,9 @@ body {
   font-size: 1rem;
 }
 
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
 .hero {
   padding: 4rem 0 2.5rem;
   text-align: left;
@@ -363,6 +375,9 @@ body {
   background: rgba(17, 24, 39, 0.3);
 }
 
+/* ============================================================
+   INPUT CARD
+   ============================================================ */
 .input-card {
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid var(--border-subtle);
@@ -415,6 +430,9 @@ body {
   color: var(--text-muted);
 }
 
+/* ============================================================
+   AGENTS PROGRESS
+   ============================================================ */
 .agents-progress {
   background: var(--bg-secondary);
   border: 1px solid var(--border-subtle);
@@ -503,6 +521,9 @@ body {
   transition: width 0.3s ease;
 }
 
+/* ============================================================
+   REPORT OUTPUT
+   ============================================================ */
 .report-section {
   display: none;
   margin-bottom: var(--space-3xl);
@@ -561,6 +582,7 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
+/* Markdown Content Styling */
 .report-content {
   color: var(--text-primary);
   font-size: 1rem;
@@ -597,6 +619,7 @@ body {
   color: var(--text-primary);
 }
 
+/* Tables */
 .report-content table {
   width: 100%;
   border-collapse: collapse;
@@ -618,6 +641,7 @@ body {
   background: var(--bg-card-hover);
 }
 
+/* Code / Blockquote */
 .report-content blockquote {
   border-left: 4px solid var(--accent-primary);
   background: var(--bg-primary);
@@ -627,6 +651,9 @@ body {
   color: var(--text-secondary);
 }
 
+/* ============================================================
+   FEATURES STRIP
+   ============================================================ */
 .features-strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -665,6 +692,9 @@ body {
   line-height: 1.5;
 }
 
+/* ============================================================
+   FOOTER
+   ============================================================ */
 .footer {
   text-align: center;
   padding: var(--space-xl) 0;
@@ -682,6 +712,9 @@ body {
   color: var(--accent-primary);
 }
 
+/* ============================================================
+   AUTH MODAL
+   ============================================================ */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -698,7 +731,7 @@ body {
 .modal-overlay.hidden {
   opacity: 0;
   pointer-events: none;
-  display: flex;
+  display: flex; /* keep flex for animation */
 }
 .modal-overlay.hidden .modal {
   transform: scale(0.95);
@@ -826,6 +859,9 @@ form.hidden {
   display: none;
 }
 
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
 .toast-container {
   position: fixed;
   bottom: var(--space-lg);
@@ -853,11 +889,20 @@ form.hidden {
 .toast.success { border-left: 4px solid var(--success); }
 .toast.error { border-left: 4px solid var(--error); }
 
-.hidden {
-  display: none !important;
+.toast.fade-out {
+  animation: toastExit 0.3s ease forwards;
 }
 
 @keyframes toastEnter {
   from { opacity: 0; transform: translateX(50px); }
   to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastExit {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(50px); }
+}
+
+/* --- Utilities --- */
+.hidden {
+  display: none !important;
 }

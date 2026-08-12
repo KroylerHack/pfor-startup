@@ -9,13 +9,14 @@
   <meta property="og:description" content="Мультиагентная AI-система, которая превращает вашу бизнес-проблему в готовую стратегию за 60 секунд.">
   <meta property="og:type" content="website">
   <title>ПФОР — Платформа Операционных Решений</title>
+  
 
   <!-- Preconnect for Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
@@ -87,6 +88,66 @@
         <p class="hero-subtitle">
           Введите вашу проблему простым языком — мультиагентная система сформирует детальный план за 5 минут.
         </p>
+
+        <div class="workspace-layout">
+          <div class="chat-stream" aria-label="Business chat overview">
+            <div class="conversation-item">
+              <div class="conversation-icon" aria-hidden="true">🎯</div>
+              <div class="conversation-copy">
+                <h3>Стратегический анализ</h3>
+                <p>Agent Director формулирует цели и задаёт концепцию решения на основе вашей задачи.</p>
+              </div>
+            </div>
+
+            <div class="conversation-item">
+              <div class="conversation-icon" aria-hidden="true">📈</div>
+              <div class="conversation-copy">
+                <h3>GTM и маркетинг</h3>
+                <p>Agent Marketer строит воронку, определяет каналы и формирует позиционирование.</p>
+              </div>
+            </div>
+
+            <div class="conversation-item">
+              <div class="conversation-icon" aria-hidden="true">💡</div>
+              <div class="conversation-copy">
+                <h3>Финансовое моделирование</h3>
+                <p>Agent Financier считает юнит-экономику, бюджет и сценарии роста.</p>
+              </div>
+            </div>
+          </div>
+
+          <aside class="agent-status-panel" aria-label="Agent pipeline status">
+            <div class="panel-header">Агенты</div>
+            <div class="agent-state active">
+              <span class="state-dot"></span>
+              <div>
+                <strong>Director</strong>
+                <small>предлагает</small>
+              </div>
+            </div>
+            <div class="agent-state pending">
+              <span class="state-dot"></span>
+              <div>
+                <strong>Marketer</strong>
+                <small>оценивает рынок</small>
+              </div>
+            </div>
+            <div class="agent-state pending">
+              <span class="state-dot"></span>
+              <div>
+                <strong>Financier</strong>
+                <small>анализирует модель</small>
+              </div>
+            </div>
+            <div class="agent-state pending">
+              <span class="state-dot"></span>
+              <div>
+                <strong>Editor</strong>
+                <small>сводит в итог</small>
+              </div>
+            </div>
+          </aside>
+        </div>
 
         <!-- ---- INPUT CARD ---- -->
         <div class="input-card" role="region" aria-label="Problem input">
