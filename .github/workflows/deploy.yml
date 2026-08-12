@@ -1,0 +1,26 @@
+name: Deploy FastAPI to VPS
+
+on:
+  push:
+    branches:
+      - main  # или master
+
+jobs:
+  deploy:
+    runs-on: self-hosted  # запускается прямо на вашей VPS
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync code to /pfor
+        run: |
+          rsync -av --exclude='.git' --exclude='venv' --exclude='.env' ./ /pfor/
+
+      - name: Install dependencies & restart service
+        run: |
+          cd /pfor
+          python3 -m venv venv
+          ./venv/bin/pip install --upgrade pip
+          ./venv/bin/pip install -r requirements.txt
+          sudo systemctl restart pfor
