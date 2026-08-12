@@ -4,7 +4,11 @@
  * report rendering, and copy/print actions.
  */
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = window.location.origin || 'http://localhost:8000';
+
+function getCurrentLanguage() {
+  return document.body.dataset.lang || localStorage.getItem('pfor-language') || 'ru';
+}
 
 // ---------------------------------------------------------------------------
 // Agent pipeline configuration
@@ -69,9 +73,11 @@ const TRANSLATIONS = {
 };
 
 function applyLanguage(lang = 'ru') {
-  const dict = TRANSLATIONS[lang] || TRANSLATIONS.ru;
-  document.documentElement.lang = lang;
-  document.body.dataset.lang = lang;
+  const safeLang = TRANSLATIONS[lang] ? lang : 'ru';
+  const dict = TRANSLATIONS[safeLang] || TRANSLATIONS.ru;
+  localStorage.setItem('pfor-language', safeLang);
+  document.documentElement.lang = safeLang;
+  document.body.dataset.lang = safeLang;
 
   document.querySelectorAll('[data-i18n]').forEach((node) => {
     const key = node.dataset.i18n;
@@ -85,10 +91,10 @@ function applyLanguage(lang = 'ru') {
 
   const langButtons = document.querySelectorAll('.lang-btn');
   langButtons.forEach((btn) => {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
+    btn.classList.toggle('active', btn.dataset.lang === safeLang);
   });
 
-  if (problemTextarea) {
+  if (problemTextarea && charCounter) {
     const len = problemTextarea.value.length;
     charCounter.textContent = dict['char.count'].replace('{count}', len);
   }
@@ -326,10 +332,13 @@ async function apiGenerateStrategy(problem) {
   const headers = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}/api/strategy/generate`, {
+  const res = await fetch(`${API_BASE}/api/v1/generate-strategy`, {
     method: 'POST',
     headers,
-    body: JSON.stringify({ problem_statement: problem }),
+    body: JSON.stringify({
+      prompt_text: problem,
+      language: getCurrentLanguage(),
+    }),
   });
 
   const data = await res.json();
@@ -375,7 +384,7 @@ async function handleGenerateStrategy() {
     console.error('Strategy generation error:', err);
   } finally {
     generateBtn.disabled = false;
-    generateBtn.textContent = 'Сформировать стратегию';
+    generateBtn.textContent = TRANSLATIONS[getCurrentLanguage()]?.['button.generate'] || 'Сформировать стратегию';
   }
 }
 
@@ -443,6 +452,15 @@ document.addEventListener('DOMContentLoaded', () => {
   progressBarFill = document.getElementById('progress-bar-fill');
   reportSection   = document.getElementById('report-section');
   reportContent   = document.getElementById('report-content');
+
+  initTheme();
+  applyLanguage(localStorage.getItem('pfor-language') || 'ru');
+
+  document.querySelectorAll('.lang-btn').forEach((btn) => {
+    btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
+  });
+
+  document.getElementById('theme-toggle-btn')?.addEventListener('click', toggleTheme);
 
   // Character counter
   problemTextarea?.addEventListener('input', updateCharCounter);
