@@ -253,7 +253,7 @@ async function generateStrategy() {
   await animateAgents();
 
   try {
-    const response = await fetch(`${API_BASE}/api/v1/generate-strategy`, {
+    const response = await fetch('/api/generate-strategy', {
       method: 'POST',
       headers,
       body: JSON.stringify({ prompt_text: prompt, language: getCurrentLanguage() }),
@@ -307,3 +307,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   applyLanguage(getCurrentLanguage());
 });
+window.applyLanguage = applyLanguage;
+window.toggleTheme = toggleTheme;
