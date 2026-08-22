@@ -32,8 +32,8 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = "pfor_password"
     POSTGRES_DB: str = "pfor_db"
 
-    OLLAMA_BASE_URL: str = "http://localhost:11434"
-    OLLAMA_MODEL: str = "llama3.1"
+    OLLAMA_BASE_URL: str = "http://100.105.40.29:11434"
+    OLLAMA_MODEL: str = "qwen2.5:3b"
 
     secret_key: str = secrets.token_urlsafe(32)
     algorithm: str = "HS256"

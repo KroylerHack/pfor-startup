@@ -12,14 +12,14 @@ def test_settings_include_postgres_and_ollama_config():
         POSTGRES_PASSWORD="pfor_password",
         POSTGRES_DB="pfor_db",
         OLLAMA_BASE_URL="http://100.105.40.29:11434",
-        OLLAMA_MODEL="llama3.1",
+        OLLAMA_MODEL="qwen2.5:3b",
     )
 
     assert settings.postgres_server == "100.105.40.29"
     assert settings.postgres_port == 5432
     assert settings.database_url.startswith("postgresql+psycopg2://")
     assert settings.ollama_base_url == "http://100.105.40.29:11434"
-    assert settings.ollama_model == "llama3.1"
+    assert settings.ollama_model == "qwen2.5:3b"
 
 
 def test_strategy_request_uses_new_api_contract():
