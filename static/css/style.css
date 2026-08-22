@@ -991,3 +991,32 @@ form.hidden {
 .hidden {
   display: none !important;
 }
+
+/* Базовые стили для ПК пишутся как обычно выше */
+
+/* --- АДАПТИВ ДЛЯ ТЕЛЕФОНОВ (Media Query) --- */
+@media (max-width: 768px) {
+  
+  /* 1. Превращаем горизонтальные блоки в колонку */
+  .container, .main-layout, .grid {
+    flex-direction: column !important;
+    grid-template-columns: 1dfr !important;
+  }
+
+  /* 2. Убираем фиксированную ширину, делаем на 100% экрана */
+  .sidebar, .content, .card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* 3. Уменьшаем отступы и шрифт, чтобы всё влезло */
+  body {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  /* 4. Прячем боковое меню в бургер (если есть) */
+  .sidebar {
+    display: none; /* или делаем свайп-меню */
+  }
+}
