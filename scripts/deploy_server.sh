@@ -17,8 +17,8 @@ find_repo_dir() {
   candidates+=("$script_dir/..")
   candidates+=("$HOME/pfor")
   candidates+=("$HOME/pfor-startup")
-  candidates+=("/home/pfor")
-  candidates+=("/home/pfor-startup")
+  candidates+=("/home/delanate/pfor-startup")
+  candidates+=("/home/delanate/pfor-startup")
   candidates+=("/opt/pfor")
   candidates+=("/srv/pfor")
 
