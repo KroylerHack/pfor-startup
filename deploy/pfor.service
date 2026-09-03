@@ -4,10 +4,12 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/pfor
-Environment=PYTHONPATH=/pfor/src
-EnvironmentFile=/pfor/.env
-ExecStart=/pfor/venv/bin/python -m uvicorn pfor.main:app --host 0.0.0.0 --port 8000 --workers 2
+User=delanate
+Group=delanate
+WorkingDirectory=/home/delanate/pfor-startup
+Environment=PYTHONPATH=/home/delanate/pfor-startup/src
+EnvironmentFile=/home/delanate/pfor-startup/.env
+ExecStart=/home/delanate/pfor-startup/venv/bin/python -m uvicorn pfor.main:app --host 127.0.0.1 --port 8000 --workers 2
 Restart=always
 RestartSec=5
 
